@@ -1,84 +1,114 @@
-let lista = [];
+document.addEventListener('DOMContentLoaded', () => {
+    let lista = [];
 
-const objTareas = {
-    id: '',
-    descripcion: ''
-}
-
-let editando = false;
-
-const formulario = document.querySelector('#formulario');
-const descripcionInput = document.querySelector('#descripcionInput');
-const btnAñadir = document.querySelector('#btnAñadir');
-const mensajeError = document.querySelector('#mensajeError');
-const tbodyTareas = document.querySelector('tbody');
-
-
-btnAñadir.addEventListener('click', validarformulario);
-
-//funcion de validación
-function validarformulario(evento) {
-    evento.preventDefault(); 
-
-    if (descripcionInput.value === '') {
-        mensajeError.style.display = 'inline'; 
-    } else {
-        
-        mensajeError.style.display = 'none';
+    const objTareas = {
+        id: '',
+        descripcion: ''
     }
 
-    if(editando){
-        editando = false;
-    } else {
-        objTareas.id = Date.now();
-        objTareas.descripcion = descripcionInput.value;
+    let editando = false;
 
-        agregarTarea();
+    const formulario = document.querySelector('#formulario');
+    const descripcionInput = document.querySelector('#descripcionInput');
+    const mensajeError = document.querySelector('#mensajeError');
+    const tbodyTareas = document.querySelector('tbody');
+
+    formulario.addEventListener('submit', validarFormulario);
+
+    // Función de validación
+    function validarFormulario(evento) {
+        evento.preventDefault(); 
+
+        if (descripcionInput.value === '') {
+            mensajeError.style.display = 'inline'; 
+        } else {
+            mensajeError.style.display = 'none';
+            if (editando) {
+                editarTareas();
+                editando = false;
+            } else {
+                objTareas.id = Date.now();
+                objTareas.descripcion = descripcionInput.value;
+                agregarTareas();
+            }
+        }
     }
-}
 
-function agregarTarea(){
-    lista.push({...objTareas});
-    mostrarTarea();
-}
+    function agregarTareas() {
+        lista.push({ ...objTareas });
+        mostrarTareas();
+        formulario.reset();
+        limpiarObjeto();
+    }
 
-function mostrarTarea(){
-    // Limpiar el contenido anterior
-    tbodyTareas.innerHTML = '';
+    function limpiarObjeto() {
+        objTareas.id = '';
+        objTareas.descripcion = '';
+    }
 
-    lista.forEach(tareas => {
-        const {id, descripcion} = tareas;
+    function mostrarTareas() {
+        limpiarHtml();
+        tbodyTareas.innerHTML = '';
 
-        const tr = document.createElement('tr');
+        lista.forEach(tareas => {
+            const { id, descripcion } = tareas;
 
-        const tdId = document.createElement('td');
-        tdId.textContent = id;
-        tr.appendChild(tdId);
+            const tr = document.createElement('tr');
 
-        const tdDescripcion = document.createElement('td');
-        tdDescripcion.textContent = descripcion;
-        tr.appendChild(tdDescripcion);
+            const tdId = document.createElement('td');
+            tdId.textContent = id;
+            tr.appendChild(tdId);
 
-        const tdAcciones = document.createElement('td');
-        tdAcciones.classList.add('text-center');
+            const tdDescripcion = document.createElement('td');
+            tdDescripcion.textContent = descripcion;
+            tr.appendChild(tdDescripcion);
 
-        const editarBoton = document.createElement('button');
-        editarBoton.innerHTML = '<i class="bi bi-pencil-square"></i>';
-        editarBoton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-4');
-        // Aquí podrías añadir la lógica para editar tareas
-        tdAcciones.appendChild(editarBoton);
+            const tdAcciones = document.createElement('td');
+            tdAcciones.classList.add('text-center');
 
-        const eliminarBoton = document.createElement('button');
-        eliminarBoton.innerHTML = '<i class="bi bi-trash3"></i>';
-        eliminarBoton.classList.add('btn', 'btn-danger', 'btn-sm');
-        // Aquí podrías añadir la lógica para eliminar tareas
-        tdAcciones.appendChild(eliminarBoton);
+            const editarBoton = document.createElement('button');
+            editarBoton.onclick = () => cargarTareas(tareas);
+            editarBoton.innerHTML = '<i class="bi bi-pencil-square"></i>';
+            editarBoton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-4');
 
-        tr.appendChild(tdAcciones);
-        tbodyTareas.appendChild(tr);
-    });
+            tdAcciones.appendChild(editarBoton);
 
-    //minuto 16:37 https://youtu.be/IuGqaTRyRlI?si=fsnqoomAEJMV8vjq
-    //Arreglar el modal para cuando se añada la terea se quite y ademas cuando añada una tarea diferente no este puesto del tiron el añadido anteriormente
-    // y poner estilo a la tabla de js. Eliminar y editar. Cookies.
-}
+            const eliminarBoton = document.createElement('button');
+            eliminarBoton.onclick = () => eliminarTareas(id);
+            eliminarBoton.innerHTML = '<i class="bi bi-trash3"></i>';
+            eliminarBoton.classList.add('btn', 'btn-danger', 'btn-sm');
+
+            tdAcciones.appendChild(eliminarBoton);
+
+            tr.appendChild(tdAcciones);
+            tbodyTareas.appendChild(tr);
+        });
+    }
+
+    function cargarTareas(tareas) {
+        const { id, descripcion } = tareas;
+
+        descripcionInput.value = descripcion;
+        objTareas.id = id;
+
+        const submitButton = formulario.querySelector('button[type="submit"]');
+        if (submitButton) {
+            submitButton.textContent = 'Actualizar';
+        } else {
+            console.error('No se encontró el botón de submit.');
+        }
+
+        editando = true;
+    }
+
+    function eliminarTareas(id) {
+        lista = lista.filter(tarea => tarea.id !== id);
+        mostrarTareas();
+    }
+
+    function limpiarHtml() {
+        while (tbodyTareas.firstChild) {
+            tbodyTareas.removeChild(tbodyTareas.firstChild);
+        }
+    }
+});
