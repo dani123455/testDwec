@@ -70,13 +70,32 @@ function editarTarea(id) {
     }
 }
 
-// Eliminar una tarea con confirmación
+// Eliminar una tarea con confirmación usando SweetAlert
 function eliminarTarea(id) {
-    if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
-        tareas = tareas.filter(t => t.id !== id);
-        actualizarTabla();
-    }
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            tareas = tareas.filter(t => t.id !== id);
+            actualizarTabla();
+            Swal.fire(
+                'Eliminado',
+                'La tarea ha sido eliminada.',
+                'success'
+            );
+        }
+    });
 }
 
 // Inicialización
 actualizarTabla();
+
+
+//hacer cookis y lo del id 
