@@ -9,8 +9,8 @@ const formulario = document.getElementById('formulario');
 const tablaTareas = document.querySelector('tbody');
 
 // Evento para agregar o editar tareas
-formulario.addEventListener('submit', (e) => {
-    e.preventDefault();
+formulario.addEventListener('submit', (event) => {
+    event.preventDefault();
     const descripcion = descripcionInput.value.trim();
 
     if (!descripcion) {
@@ -98,4 +98,3 @@ function eliminarTarea(id) {
 actualizarTabla();
 
 
-//hacer cookis y lo del id 
