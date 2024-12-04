@@ -1,114 +1,100 @@
-document.addEventListener('DOMContentLoaded', () => {
-    let lista = [];
+// Array para almacenar las tareas
+let tareas = [];
+let idTareaEditando = null;
 
-    const objTareas = {
-        id: '',
-        descripcion: ''
+// Referencias al DOM
+const descripcionInput = document.getElementById('descripcionInput');
+const mensajeError = document.getElementById('mensajeError');
+const formulario = document.getElementById('formulario');
+const tablaTareas = document.querySelector('tbody');
+
+// Evento para agregar o editar tareas
+formulario.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const descripcion = descripcionInput.value.trim();
+
+    if (!descripcion) {
+        mensajeError.style.display = 'block';
+        return;
+    }
+    mensajeError.style.display = 'none';
+
+    if (idTareaEditando !== null) {
+        // Editar tarea existente
+        const tarea = tareas.find(t => t.id === idTareaEditando);
+        tarea.descripcion = descripcion;
+        idTareaEditando = null;
+        document.getElementById('tituloModal').textContent = 'Añadir tarea';
+    } else {
+        // Agregar nueva tarea
+        const nuevaTarea = {
+            id: Date.now(),
+            descripcion,
+        };
+        tareas.push(nuevaTarea);
     }
 
-    let editando = false;
-
-    const formulario = document.querySelector('#formulario');
-    const descripcionInput = document.querySelector('#descripcionInput');
-    const mensajeError = document.querySelector('#mensajeError');
-    const tbodyTareas = document.querySelector('tbody');
-
-    formulario.addEventListener('submit', validarFormulario);
-
-    // Función de validación
-    function validarFormulario(evento) {
-        evento.preventDefault(); 
-
-        if (descripcionInput.value === '') {
-            mensajeError.style.display = 'inline'; 
-        } else {
-            mensajeError.style.display = 'none';
-            if (editando) {
-                editarTareas();
-                editando = false;
-            } else {
-                objTareas.id = Date.now();
-                objTareas.descripcion = descripcionInput.value;
-                agregarTareas();
-            }
-        }
-    }
-
-    function agregarTareas() {
-        lista.push({ ...objTareas });
-        mostrarTareas();
-        formulario.reset();
-        limpiarObjeto();
-    }
-
-    function limpiarObjeto() {
-        objTareas.id = '';
-        objTareas.descripcion = '';
-    }
-
-    function mostrarTareas() {
-        limpiarHtml();
-        tbodyTareas.innerHTML = '';
-
-        lista.forEach(tareas => {
-            const { id, descripcion } = tareas;
-
-            const tr = document.createElement('tr');
-
-            const tdId = document.createElement('td');
-            tdId.textContent = id;
-            tr.appendChild(tdId);
-
-            const tdDescripcion = document.createElement('td');
-            tdDescripcion.textContent = descripcion;
-            tr.appendChild(tdDescripcion);
-
-            const tdAcciones = document.createElement('td');
-            tdAcciones.classList.add('text-center');
-
-            const editarBoton = document.createElement('button');
-            editarBoton.onclick = () => cargarTareas(tareas);
-            editarBoton.innerHTML = '<i class="bi bi-pencil-square"></i>';
-            editarBoton.classList.add('btn', 'btn-primary', 'btn-sm', 'me-4');
-
-            tdAcciones.appendChild(editarBoton);
-
-            const eliminarBoton = document.createElement('button');
-            eliminarBoton.onclick = () => eliminarTareas(id);
-            eliminarBoton.innerHTML = '<i class="bi bi-trash3"></i>';
-            eliminarBoton.classList.add('btn', 'btn-danger', 'btn-sm');
-
-            tdAcciones.appendChild(eliminarBoton);
-
-            tr.appendChild(tdAcciones);
-            tbodyTareas.appendChild(tr);
-        });
-    }
-
-    function cargarTareas(tareas) {
-        const { id, descripcion } = tareas;
-
-        descripcionInput.value = descripcion;
-        objTareas.id = id;
-
-        const submitButton = formulario.querySelector('button[type="submit"]');
-        if (submitButton) {
-            submitButton.textContent = 'Actualizar';
-        } else {
-            console.error('No se encontró el botón de submit.');
-        }
-
-        editando = true;
-    }
-
-    function eliminarTareas(id) {
-        lista = lista.filter(tarea => tarea.id !== id);
-        mostrarTareas();
-    }
-
-    function limpiarHtml() {
-        while (tbodyTareas.firstChild) {
-            tbodyTareas.removeChild(tbodyTareas.firstChild);
-        }
-    }
+    descripcionInput.value = '';
+    actualizarTabla();
+    const modalElement = bootstrap.Modal.getInstance(document.getElementById('modal'));
+    modalElement.hide();
 });
+
+// Actualiza la tabla con las tareas
+function actualizarTabla() {
+    tablaTareas.innerHTML = '';
+    tareas.forEach(tarea => {
+        const fila = document.createElement('tr');
+
+        fila.innerHTML = `
+            <td>${tarea.id}</td>
+            <td>${tarea.descripcion}</td>
+            <td class="text-center">
+                <button class="btn btn-primary btn-sm me-4" onclick="editarTarea(${tarea.id})"><i class="bi bi-pencil-square"></i></button>
+                <button class="btn btn-danger btn-sm" onclick="eliminarTarea(${tarea.id})"><i class="bi bi-trash3"></i></button>
+            </td>
+        `;
+        tablaTareas.appendChild(fila);
+    });
+}
+
+// Editar una tarea
+function editarTarea(id) {
+    const tarea = tareas.find(t => t.id === id);
+    if (tarea) {
+        descripcionInput.value = tarea.descripcion;
+        idTareaEditando = id;
+        document.getElementById('tituloModal').textContent = 'Editar tarea';
+        const modal = new bootstrap.Modal(document.getElementById('modal'));
+        modal.show();
+    }
+}
+
+// Eliminar una tarea con confirmación usando SweetAlert
+function eliminarTarea(id) {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "No podrás revertir esta acción.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            tareas = tareas.filter(t => t.id !== id);
+            actualizarTabla();
+            Swal.fire(
+                'Eliminado',
+                'La tarea ha sido eliminada.',
+                'success'
+            );
+        }
+    });
+}
+
+// Inicialización
+actualizarTabla();
+
+
