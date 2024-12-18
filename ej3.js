@@ -17,8 +17,9 @@ function soloNombre(){
     return arrEstudiantes.map(x=>x.nombre);
 }
 
-function media(){
-    return arrEstudiantes.reduce((acc, curr) => acc * curr.nota, 0);
+function media() {
+    let totalNotas = arrEstudiantes.reduce((acc, curr) => acc + curr.nota, 0);
+    return totalNotas / arrEstudiantes.length;
 }
 
 console.log(aprobados());
@@ -26,4 +27,3 @@ console.log(edad());
 console.log(soloNombre());
 console.log(media());
 
-//corregir entero
