@@ -10,8 +10,9 @@
 <body class="bg-degradado">
     <div class="container mt-5 d-flex justify-content-center align-items-center">
         <div class="card bg-dark" style="width: 22rem;">
-            <div class="card-title">
-                <h5 class="card-title text-white text-center mt-4 fw-bold">Iniciar Sesión</h5>
+            <div class="card-title d-flex">
+                <h5 onclick="" id="login"class="card-title text-white ms-5 mt-4 fw-bold border-end p-1">Iniciar Sesión</h5>
+                <h5 id="register" class="card-title text-secondary me-5 mt-4 fw-bold p-1">Registrarse</h5>
             </div>
             <div class="card-body">
                 <div class="mb-3">
@@ -21,7 +22,7 @@
                 <div class="mb-3">
                     <label for="password" class="form-label text-white">Contraseña</label>
                     <input class="form-control" placeholder="************" id="password"></input>
-                    <div id="passwordHelpBlock" class="form-text text-white mt-3">
+                    <div id="passwordHelpBlock" class="form-text text-white mt-3 bg-secondary p-2 rounded-2">
                         Tu contaseña debe tener entre 8-12 caracteres. Debes añadir mayusculas,minusculas y números.
                     </div>
                 </div>
@@ -32,4 +33,7 @@
         </div>
     </div>
 </body>
+<script src="js/main.js"></script>
+<script src="libs/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
+<script src="libs/jQuery/jquery.js"></script>
 </html>
