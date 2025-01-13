@@ -11,28 +11,54 @@
     <div class="container mt-5 d-flex justify-content-center align-items-center">
         <div class="card bg-dark" style="width: 22rem;">
             <div class="card-title d-flex">
-                <h5 id="login"class="card-title text-white ms-5 mt-4 fw-bold border-end p-1">Iniciar Sesión</h5>
+                <h5 id="login" class="card-title text-white ms-5 mt-4 fw-bold border-end p-1">Iniciar Sesión</h5>
                 <h5 id="register" class="card-title text-secondary me-5 mt-4 fw-bold p-1">Registrarse</h5>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <label for="email" class="form-label text-white">Email</label>
-                    <input type="email" class="form-control" id="email" placeholder="name@example.com">
-                </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label text-white">Contraseña</label>
-                    <input class="form-control" placeholder="************" id="password"></input>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <a href="#" class="btn btn-primary">Iniciar sesión</a>
-                </div>
+            <div id="iniciarsesion" class="card-body">
+                <form id="formulario">
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-white">Email</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-white">Contraseña</label>
+                        <input type="password" class="form-control" id="password" placeholder="************">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="#" class="btn btn-primary">Iniciar sesión</a>
+                    </div>
+                </form>
+            </div>
+    
+                
+            <div id="registrarse" class="card-body" style="display: none;">
+                <form id="formulario2">
+                    <div class="mb-3">
+                        <label for="email" class="form-label text-white">Email</label>
+                        <input type="email" class="form-control" id="email2" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-white">Contraseña</label>
+                        <input type="password" class="form-control" id="password2" placeholder="************" 
+                            data-bs-toggle="tooltip" 
+                            data-bs-placement="right" 
+                            title="La contraseña debe tener de 8 a 12 caracteres, incluir mayúsculas, minúsculas y números.">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label text-white">Repetir contraseña</label>
+                        <input type="password" class="form-control" id="password3" placeholder="************">
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a href="#" class="btn btn-primary">Registrarse</a>
+                    </div>
+                </form>
+                
             </div>
         </div>
     </div>
-</body>
-<script src="js/main.js"></script>
-<script src="libs/bootstrap-5.3.3-dist/js/bootstrap.min.js"></script>
-<script src="libs/jQuery/jquery.js"></script>
-</html>
 
-<!--Hacer tooltip-->
+    <script src="js/main.js"></script>
+    <script src="libs/jQuery/jquery-3.7.1.js"></script>
+    <script src="libs/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
