@@ -1,3 +1,7 @@
 .bg-degradado{
     background: linear-gradient(to right, #6a0dad, #00bfff); /* De morado a azul de izquierda a derecha *//* De morado a azul */
 }
+
+#login, #register{
+    cursor: pointer;
+}
