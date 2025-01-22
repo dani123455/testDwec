@@ -19,10 +19,6 @@ let btnVer2 = document.getElementById('btnVer2');
 let btnVer3 = document.getElementById('btnVer3');
 let currentLocation = window.location;
 
-console.log(currentLocation)
-
-
-
 let usuarios = [];
 
 // Cambiar de sección
@@ -104,7 +100,7 @@ btnRegis.addEventListener('click', function registro(event) {
         inputPass3.value = '';
     }
 });
-
+// funciones verificar si la contraseña tiene mayusculas, minusculas y numeros
 function tieneMayusMinus(texto) {
     let tieneMayus = false;
     let tieneMinus = false;
@@ -154,7 +150,7 @@ btnInicio.addEventListener('click', function inicio(event){
     }
 });
 
-
+// Ocultar o mostrar contraseña
 btnVer.addEventListener('click', function ver(evento) {
     evento.preventDefault();
     let seVe = inputPass.type === "text";
@@ -199,6 +195,7 @@ if (window.location.pathname.endsWith("admin.html")) {
     let btnCerrar = document.getElementById("btnCerrar");
     let tablaContenido = document.getElementById("tablaContenido");
     let usuarios = [];
+
 //Cerrar sesion
     btnCerrar.addEventListener('click', function Cerrar(evento) {
         evento.preventDefault();
@@ -219,7 +216,6 @@ if (window.location.pathname.endsWith("admin.html")) {
         </tr>`;
     });
 
-    // Agregar el contenido a la tabla
     tablaContenido.innerHTML = contenidoHTML;
 
     // Inicializar DataTable 
