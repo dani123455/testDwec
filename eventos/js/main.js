@@ -1,3 +1,7 @@
+document.addEventListener("DOMContentLoaded", function() {
+
+if (window.location.pathname.endsWith("index.html")) {
+
 let login = document.getElementById("login");
 let register = document.getElementById("register");
 let registrarse = document.getElementById("registrarse");
@@ -10,9 +14,14 @@ let inputPass2 = document.getElementById('password2');
 let inputPass3 = document.getElementById('password3');
 let inputEmail = document.getElementById('email');
 let inputPass = document.getElementById('password');
-let tieneMayus = false;
-let tieneMinus = false;
-let tieneNumero = false;
+let btnVer = document.getElementById('btnVer');
+let btnVer2 = document.getElementById('btnVer2');
+let btnVer3 = document.getElementById('btnVer3');
+let currentLocation = window.location;
+
+console.log(currentLocation)
+
+
 
 let usuarios = [];
 
@@ -65,6 +74,10 @@ btnRegis.addEventListener('click', function registro(event) {
         errores.push('Tu contraseña debe tener mayúsculas y minúsculas');
     } else if (!numero(inputPass2.value)) {
         errores.push('Tu contraseña debe tener números');
+    }
+
+    if (usuarios.find(usuario => usuario.email === inputEmail2.value)) {
+        errores.push('Este email ya está registrado');
     }
 
     if (inputPass2.value !== inputPass3.value) {
@@ -141,4 +154,99 @@ btnInicio.addEventListener('click', function inicio(event){
     }
 });
 
+
+btnVer.addEventListener('click', function ver(evento) {
+    evento.preventDefault();
+    let seVe = inputPass.type === "text";
+
+    if (seVe) {
+        inputPass.type = "password"; 
+    } else {
+        inputPass.type = "text"; 
+    }
+});
+
+btnVer2.addEventListener('click', function ver2(evento) {
+    evento.preventDefault();
+    let seVe2 = inputPass2.type === "text";
+
+    if (seVe2) {
+        inputPass2.type = "password"; 
+    } else {
+        inputPass2.type = "text"; 
+    }
+});
+
+btnVer3.addEventListener('click', function ver3(evento) {
+    evento.preventDefault();
+    let seVe3 = inputPass3.type === "text";
+
+    if (seVe3) {
+        inputPass3.type = "password"; 
+    } else {
+        inputPass3.type = "text"; 
+    }
+});
+
+
 cambioDeSeccion();
+}
+
+
+//admin.html
+
+if (window.location.pathname.endsWith("admin.html")) {
+    let btnCerrar = document.getElementById("btnCerrar");
+    let tablaContenido = document.getElementById("tablaContenido");
+    let usuarios = [];
+//Cerrar sesion
+    btnCerrar.addEventListener('click', function Cerrar(evento) {
+        evento.preventDefault();
+        window.location.href = 'index.html';
+    });
+
+    // Verificar si hay usuarios en localStorage
+    if (localStorage.getItem('usuarios')) {
+        usuarios = JSON.parse(localStorage.getItem('usuarios'));
+    }
+
+    // Generar contenido HTML para la tabla
+    let contenidoHTML = '';
+    usuarios.forEach(usuario => {
+        contenidoHTML += `<tr>
+            <td>${usuario.email}</td>
+            <td>${usuario.password}</td>
+        </tr>`;
+    });
+
+    // Agregar el contenido a la tabla
+    tablaContenido.innerHTML = contenidoHTML;
+
+    // Inicializar DataTable 
+    $(document).ready(function () {
+        $('#Mytable').DataTable({
+            language: {
+                processing: "Procesando...",
+                search: "Buscar:",
+                lengthMenu: "Mostrar _MENU_ registros",
+                info: "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
+                infoEmpty: "Mostrando registros del 0 al 0 de un total de 0 registros",
+                infoFiltered: "(filtrado de un total de _MAX_ registros)",
+                loadingRecords: "Cargando...",
+                zeroRecords: "No se encontraron resultados",
+                emptyTable: "Ningún dato disponible en esta tabla",
+                paginate: {
+                    first: "Primero",
+                    previous: "Anterior",
+                    next: "Siguiente",
+                    last: "Último"
+                },
+                aria: {
+                    sortAscending: ": Activar para ordenar la columna de manera ascendente",
+                    sortDescending: ": Activar para ordenar la columna de manera descendente"
+                }
+            }
+        });
+    });
+}
+});
